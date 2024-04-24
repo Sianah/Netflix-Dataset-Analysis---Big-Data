@@ -4,6 +4,8 @@ import bz2
 import json
 import numpy as np
 import pandas as pd
+#REMEMEBER: Clustering is a technique in machine learning that involves grouping similar data points together. 
+#It is commonly used for data analysis, pattern recognition, and image processing.
 
 # # Get a list of all the files in the HTRC dataset
 # files = glob.glob('/c:/Users/Sisi/Desktop/Netflix Dataset Analysis - Big Data/netflix.csv')
