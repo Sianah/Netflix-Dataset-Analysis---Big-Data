@@ -16,4 +16,10 @@ import pandas as pd
 #             data = line.strip().split(',')
 #             print(data)
 df_netflix = pd.read_csv(filepath_or_buffer="netflix.csv", encoding='latin1')
-print(df_netflix)
+# print(df_netflix)
+
+# Check for missing values in the dataset
+missing_data_summary = df_netflix.isnull().sum()
+
+# Display the missing data summary
+print(missing_data_summary)
