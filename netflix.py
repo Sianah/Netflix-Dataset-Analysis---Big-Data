@@ -81,3 +81,6 @@ plt.xlabel('Cluster')
 plt.ylabel('Count')
 plt.legend(title='Genre', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.show()
+
+#scatter plot of imdb_score and runtime
+plt.figure(figsize=(10, 6))
