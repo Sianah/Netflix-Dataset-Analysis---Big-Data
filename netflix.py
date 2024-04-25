@@ -66,6 +66,13 @@ plt.ylabel('Inertia')
 plt.xticks(k_range)
 plt.show()
 
+# Fit the KMeans algorithm to the data
+kmeans = KMeans(n_clusters=4, random_state=42)
+clusters = kmeans.fit_predict(x_processed)
+
+# Add the cluster labels to the dataset
+netflix['Cluster'] = clusters
+
 
 genre_count = netflix.groupby(['Cluster','genre']).size().unstack(fill_value=0)
 genre_count.plot(kind='bar', stacked=True, figsize=(12, 6))
