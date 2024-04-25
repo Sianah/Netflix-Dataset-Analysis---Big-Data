@@ -27,3 +27,9 @@ import seaborn as sns
 # # Display the missing data summary
 # print(missing_data_summary)
 
+#load the dataset
+netflix = pd.read_csv('netflix.csv')
+
+# Display the first few rows of the dataset
+categorical_columns = ['genre', 'language']
+numerical_columns = ['imdb_score', 'runtime']
