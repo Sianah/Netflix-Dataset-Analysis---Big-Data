@@ -45,3 +45,6 @@ preprocessor = ColumnTransformer(
         ('cat', categorical_transformer, categorical_columns)
     ]
 )
+
+# Fit and transform the data
+X = preprocessor.fit_transform(netflix)
