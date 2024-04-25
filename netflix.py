@@ -47,4 +47,12 @@ preprocessor = ColumnTransformer(
 )
 
 # Fit and transform the data
-X = preprocessor.fit_transform(netflix)
+x_processed = preprocessor.fit_transform(netflix)
+
+#determine the optimal number of clusters
+inertia = []
+k_range = range(1, 21)
+for k in k_range:
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(x_processed)
+    inertia.append(kmeans.inertia_)
