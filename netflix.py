@@ -56,3 +56,12 @@ for k in k_range:
     kmeans = KMeans(n_clusters=k, random_state=42)
     kmeans.fit(x_processed)
     inertia.append(kmeans.inertia_)
+
+# Plot the inertia
+plt.figure(figsize=(10, 6))
+plt.plot(k_range, inertia, marker='o')
+plt.title('Elbow Method')
+plt.xlabel('Number of clusters')
+plt.ylabel('Inertia')
+plt.xticks(k_range)
+plt.show()
