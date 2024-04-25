@@ -5,8 +5,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import seaborn as sns
-#REMEMEBER: Clustering is a technique in machine learning that involves grouping similar data points together. 
-#It is commonly used for data analysis, pattern recognition, and image processing.
+# REMEMEBER: Clustering is a technique in machine learning that involves grouping similar data points together.
+# It is commonly used for data analysis, pattern recognition, and image processing.
 
 # # Get a list of all the files in the HTRC dataset
 # files = glob.glob('/c:/Users/Sisi/Desktop/Netflix Dataset Analysis - Big Data/netflix.csv')
@@ -27,9 +27,21 @@ import seaborn as sns
 # # Display the missing data summary
 # print(missing_data_summary)
 
-#load the dataset
+# load the dataset
 netflix = pd.read_csv('netflix.csv')
 
 # Display the first few rows of the dataset
 categorical_columns = ['genre', 'language']
 numerical_columns = ['imdb_score', 'runtime']
+
+# Creating transformers
+numeric_transformer = StandardScaler()
+categorical_transformer = OneHotEncoder(handle_unknown='ignore')
+
+# Creating a preprocessor
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numerical_columns),
+        ('cat', categorical_transformer, categorical_columns)
+    ]
+)
