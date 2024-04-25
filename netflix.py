@@ -1,9 +1,10 @@
-import glob
-import random
-import bz2
-import json
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import seaborn as sns
 #REMEMEBER: Clustering is a technique in machine learning that involves grouping similar data points together. 
 #It is commonly used for data analysis, pattern recognition, and image processing.
 
@@ -17,11 +18,12 @@ import pandas as pd
 #         for line in f:
 #             data = line.strip().split(',')
 #             print(data)
-df_netflix = pd.read_csv(filepath_or_buffer="netflix.csv", encoding='latin1')
-# print(df_netflix)
+# df_netflix = pd.read_csv(filepath_or_buffer="netflix.csv", encoding='latin1')
+# # print(df_netflix)
 
-# Check for missing values in the dataset
-missing_data_summary = df_netflix.isnull().sum()
+# # Check for missing values in the dataset
+# missing_data_summary = df_netflix.isnull().sum()
 
-# Display the missing data summary
-print(missing_data_summary)
+# # Display the missing data summary
+# print(missing_data_summary)
+
