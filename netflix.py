@@ -67,4 +67,10 @@ plt.xticks(k_range)
 plt.show()
 
 
-genre_count = netflix.groupby('Cluster','genre').size().unstack(fill_value=0)
+genre_count = netflix.groupby(['Cluster','genre']).size().unstack(fill_value=0)
+genre_count.plot(kind='bar', stacked=True, figsize=(12, 6))
+plt.title('Genre distribution by cluster')
+plt.xlabel('Cluster')
+plt.ylabel('Count')
+plt.legend(title='Genre', bbox_to_anchor=(1.05, 1), loc='upper left')
+plt.show()
