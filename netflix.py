@@ -84,3 +84,10 @@ plt.show()
 
 #scatter plot of imdb_score and runtime
 plt.figure(figsize=(10, 6))
+sns.scatterplot(data= netflix, x='runtime', y='imdb_score', hue='Cluster', palette='viridis', style='Cluster')
+plt.title('IMDB Score vs Runtime')
+plt.xlabel('Runtime') #in minutes
+plt.ylabel('IMDB Score')
+plt.legend(title='Cluster')
+plt.grid(True)
+plt.show()
