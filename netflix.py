@@ -49,7 +49,7 @@ preprocessor = ColumnTransformer(
 # Fit and transform the data
 x_processed = preprocessor.fit_transform(netflix)
 
-#determine the optimal number of clusters
+# determine the optimal number of clusters
 inertia = []
 k_range = range(1, 21)
 for k in k_range:
@@ -65,3 +65,6 @@ plt.xlabel('Number of clusters')
 plt.ylabel('Inertia')
 plt.xticks(k_range)
 plt.show()
+
+
+genre_count = netflix.groupby('Cluster','genre').size().unstack(fill_value=0)
