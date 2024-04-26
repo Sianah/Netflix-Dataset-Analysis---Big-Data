@@ -5,6 +5,10 @@ from sklearn.compose import ColumnTransformer
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 import seaborn as sns
+import glob
+import random
+from sklearn.cluster import DBSCAN
+from sklearn.decomposition import PCA
 # REMEMEBER: Clustering is a technique in machine learning that involves grouping similar data points together.
 # It is commonly used for data analysis, pattern recognition, and image processing.
 
@@ -74,7 +78,8 @@ clusters = kmeans.fit_predict(x_processed)
 netflix['Cluster'] = clusters
 
 
-genre_count = netflix.groupby(['Cluster','genre']).size().unstack(fill_value=0)
+genre_count = netflix.groupby(
+    ['Cluster', 'genre']).size().unstack(fill_value=0)
 genre_count.plot(kind='bar', stacked=True, figsize=(12, 6))
 plt.title('Genre distribution by cluster')
 plt.xlabel('Cluster')
@@ -82,20 +87,54 @@ plt.ylabel('Count')
 plt.legend(title='Genre', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.show()
 
-#scatter plot of imdb_score and runtime
+# scatter plot of imdb_score and runtime
 plt.figure(figsize=(10, 6))
-sns.scatterplot(data= netflix, x='runtime', y='imdb_score', hue='Cluster', palette='viridis', style='Cluster')
+sns.scatterplot(data=netflix, x='runtime', y='imdb_score',
+                hue='Cluster', palette='viridis', style='Cluster')
 plt.title('IMDB Score vs Runtime')
-plt.xlabel('Runtime') #in minutes
+plt.xlabel('Runtime')  # in minutes
 plt.ylabel('IMDB Score')
 plt.legend(title='Cluster')
 plt.grid(True)
 plt.show()
 
-#TODO: 
-#USE ANOTHER CLUSTERING TECHNIQUE
-#REDUCE DIMENSIONALITY TO TWO DIMENSIONS
-#GENERATE AUTOMATIC REPORTS
-#PERFORM CORRELATION ANALYSIS TO KNOW HOW DIFFERENT MOVIE CHARACTERISTICS ARE RELATED
-#VALIDATE THE CLUSTERING RESULTS USING THE SILHOUETTE SCORE
-#ANALYZE PREMIERE DATES AND YEARS TO IDENTIFY TRENDS
+# TODO:
+# USE ANOTHER CLUSTERING TECHNIQUE
+# REDUCE DIMENSIONALITY TO TWO DIMENSIONS
+# GENERATE AUTOMATIC REPORTS
+# PERFORM CORRELATION ANALYSIS TO KNOW HOW DIFFERENT MOVIE CHARACTERISTICS ARE RELATED
+# VALIDATE THE CLUSTERING RESULTS USING THE SILHOUETTE SCORE
+# ANALYZE PREMIERE DATES AND YEARS TO IDENTIFY TRENDS
+
+# Fit and transform the data using DBSCAN
+dbscan = DBSCAN(eps=0.5, min_samples=5)
+clusters = dbscan.fit_predict(x_processed)
+
+# Add the cluster labels to the dataset
+netflix['Cluster_DBSCAN'] = clusters
+
+# Plot the clusters using DBSCAN
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=netflix, x='runtime', y='imdb_score',
+                hue='Cluster_DBSCAN', palette='viridis', style='Cluster_DBSCAN')
+plt.title('IMDB Score vs Runtime (DBSCAN)')
+plt.xlabel('Runtime')  # in minutes
+plt.ylabel('IMDB Score')
+plt.legend(title='Cluster')
+plt.grid(True)
+plt.show()
+
+# Reduce dimensionality to two dimensions
+pca = PCA(n_components=2)
+x_processed_2d = pca.fit_transform(x_processed)
+
+# Plot the reduced data
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=netflix, x=x_processed_2d[:, 0], y=x_processed_2d[:, 1],
+                hue='Cluster', palette='viridis', style='Cluster')
+plt.title('Dimensionality Reduction (2D)')
+plt.xlabel('Dimension 1')
+plt.ylabel('Dimension 2')
+plt.legend(title='Cluster')
+plt.grid(True)
+plt.show()
