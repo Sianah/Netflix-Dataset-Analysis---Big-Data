@@ -139,3 +139,11 @@ plt.ylabel('Dimension 2')
 plt.legend(title='Cluster')
 plt.grid(True)
 plt.show()
+
+#generate automatic reports
+# Perform correlation analysis
+correlation_matrix = netflix.corr()
+plt.figure(figsize=(10, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
+plt.title('Correlation Matrix')
+plt.show()
