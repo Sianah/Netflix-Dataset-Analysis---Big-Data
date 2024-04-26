@@ -142,7 +142,8 @@ plt.show()
 
 #generate automatic reports
 # Perform correlation analysis
-correlation_matrix = netflix.corr()
+numeric_netflix = netflix.select_dtypes(include=[np.number])
+correlation_matrix = numeric_netflix.corr()
 plt.figure(figsize=(10, 6))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt='.2f')
 plt.title('Correlation Matrix')
