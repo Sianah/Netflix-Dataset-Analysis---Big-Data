@@ -125,7 +125,7 @@ plt.grid(True)
 plt.show()
 
 # Reduce dimensionality to two dimensions
-pca = PCA(solver='arpack')
+pca = PCA(n_components=2)  # specify the number of components
 svd = TruncatedSVD()
 x_processed_2d = svd.fit_transform(x_processed)
 
