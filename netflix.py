@@ -8,7 +8,7 @@ import seaborn as sns
 import glob
 import random
 from sklearn.cluster import DBSCAN
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA, TruncatedSVD
 # REMEMEBER: Clustering is a technique in machine learning that involves grouping similar data points together.
 # It is commonly used for data analysis, pattern recognition, and image processing.
 
@@ -125,8 +125,9 @@ plt.grid(True)
 plt.show()
 
 # Reduce dimensionality to two dimensions
-pca = PCA(n_components=2)
-x_processed_2d = pca.fit_transform(x_processed)
+pca = PCA(solver='arpack')
+svd = TruncatedSVD()
+x_processed_2d = svd.fit_transform(x_processed)
 
 # Plot the reduced data
 plt.figure(figsize=(10, 6))
