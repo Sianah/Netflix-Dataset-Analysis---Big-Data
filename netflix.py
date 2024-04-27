@@ -9,6 +9,7 @@ import glob
 import random
 from sklearn.cluster import DBSCAN
 from sklearn.decomposition import PCA, TruncatedSVD
+from sklearn.metrics import silhouette_score
 # REMEMEBER: Clustering is a technique in machine learning that involves grouping similar data points together.
 # It is commonly used for data analysis, pattern recognition, and image processing.
 
@@ -140,7 +141,7 @@ plt.legend(title='Cluster')
 plt.grid(True)
 plt.show()
 
-#generate automatic reports
+# generate automatic reports
 # Perform correlation analysis
 numeric_netflix = netflix.select_dtypes(include=[np.number])
 correlation_matrix = numeric_netflix.corr()
@@ -150,3 +151,5 @@ plt.title('Correlation Matrix')
 plt.show()
 
 # Validate the clustering results using the silhouette score
+silhouette = silhouette_score(x_processed, clusters)
+print(f'Silhouette Score: {silhouette}')
