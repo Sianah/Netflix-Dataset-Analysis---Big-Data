@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.cluster import KMeans
@@ -104,7 +105,7 @@ plt.show()
 # REDUCE DIMENSIONALITY TO TWO DIMENSIONS(check)
 # GENERATE AUTOMATIC REPORTS
 # PERFORM CORRELATION ANALYSIS TO KNOW HOW DIFFERENT MOVIE CHARACTERISTICS ARE RELATED(check)
-# VALIDATE THE CLUSTERING RESULTS USING THE SILHOUETTE SCORE
+# VALIDATE THE CLUSTERING RESULTS USING THE SILHOUETTE SCORE(check)
 # ANALYZE PREMIERE DATES AND YEARS TO IDENTIFY TRENDS
 
 # Fit and transform the data using DBSCAN
@@ -126,18 +127,18 @@ plt.grid(True)
 plt.show()
 
 # Reduce dimensionality to two dimensions
-pca = PCA(n_components=2)  # specify the number of components
-svd = TruncatedSVD()
-x_processed_2d = svd.fit_transform(x_processed)
+svd = TruncatedSVD(n_components=2)
+x_svd = svd.fit_transform(x_processed)  # Apply SVD on the processed data
+netflix['SVD1'] = x_svd[:, 0]
+netflix['SVD2'] = x_svd[:, 1]
 
-# Plot the reduced data
+# Plotting DBSCAN results using the SVD reduced dimensions
 plt.figure(figsize=(10, 6))
-sns.scatterplot(data=netflix, x=x_processed_2d[:, 0], y=x_processed_2d[:, 1],
-                hue='Cluster', palette='viridis', style='Cluster')
-plt.title('Dimensionality Reduction (2D)')
-plt.xlabel('Dimension 1')
-plt.ylabel('Dimension 2')
-plt.legend(title='Cluster')
+sns.scatterplot(x='SVD1', y='SVD2', hue='Cluster_DBSCAN', data=netflix, palette='viridis', style='Cluster_DBSCAN')
+plt.title('DBSCAN Clustering Results')
+plt.xlabel('SVD Component 1')
+plt.ylabel('SVD Component 2')
+plt.legend(title='DBSCAN Cluster')
 plt.grid(True)
 plt.show()
 
