@@ -166,7 +166,7 @@ print(f'Silhouette Score: {silhouette}')
 netflix['Year'] = pd.to_datetime(netflix['premiere']).dt.year
 # Plot the number of movies released each year
 plt.figure(figsize=(10, 6))
-sns.countplot(x='Year', data=netflix, palette='viridis')
+sns.countplot(x='Year', data=netflix, palette='viridis',hue='year',legend=False)
 plt.title('Number of Movies Released Each Year')
 plt.xlabel('Year')
 plt.ylabel('Count')
@@ -175,7 +175,8 @@ plt.show()
 
 # Plot the number of movies released each month
 plt.figure(figsize=(10, 6))
-sns.countplot(x=pd.to_datetime(netflix['premiere']).dt.month, data=netflix, palette='viridis')
+month = pd.to_datetime(netflix['premiere']).dt.month
+sns.countplot(x=month, data=netflix, palette='viridis', hue=month,legend=False)
 plt.title('Number of Movies Released Each Month')
 plt.xlabel('Month')
 plt.ylabel('Count')
@@ -184,7 +185,8 @@ plt.show()
 
 # Plot the number of movies released each day of the week
 plt.figure(figsize=(10, 6))
-sns.countplot(x=pd.to_datetime(netflix['premiere']).dt.day_name(), data=netflix, palette='viridis')
+day = pd.to_datetime(netflix['premiere']).dt.day_name()
+sns.countplot(x=day, data=netflix, palette='viridis', hue=day,legend=False)
 plt.title('Number of Movies Released Each Day of the Week')
 plt.xlabel('Day of the Week')
 plt.ylabel('Count')
