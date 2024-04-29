@@ -143,6 +143,12 @@ plt.grid(True)
 plt.show()
 
 # generate automatic reports
+# Display the first few rows of the dataset
+print(netflix.head())
+# Generate automatic reports
+report = pd.DataFrame({'Cluster': netflix['Cluster'], 'Genre': netflix['genre'], 'Language': netflix['language'], 'IMDB Score': netflix['imdb_score'], 'Runtime': netflix['runtime']})
+report.to_csv('netflix_report.csv', index=False)
+print('Automatic report generated and saved as netflix_report.csv')
 # Perform correlation analysis
 numeric_netflix = netflix.select_dtypes(include=[np.number])
 correlation_matrix = numeric_netflix.corr()
