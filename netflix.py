@@ -154,3 +154,15 @@ plt.show()
 # Validate the clustering results using the silhouette score
 silhouette = silhouette_score(x_processed, clusters)
 print(f'Silhouette Score: {silhouette}')
+
+# Analyze premiere dates and years to identify trends
+# Extract the year from the premiere column
+netflix['Year'] = pd.to_datetime(netflix['premiere']).dt.year
+# Plot the number of movies released each year
+plt.figure(figsize=(10, 6))
+sns.countplot(x='Year', data=netflix, palette='viridis')
+plt.title('Number of Movies Released Each Year')
+plt.xlabel('Year')
+plt.ylabel('Count')
+plt.xticks(rotation=45)
+plt.show()
