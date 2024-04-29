@@ -191,3 +191,12 @@ plt.title('Number of Movies Released Each Day of the Week')
 plt.xlabel('Day of the Week')
 plt.ylabel('Count')
 plt.show()
+
+#plot number of movies released each language
+plt.figure(figsize=(10, 6))
+sns.countplot(x='language', data=netflix, palette='viridis',hue='language',legend=False)
+plt.title('Number of Movies Released Each Language')
+plt.xlabel('Language')
+plt.ylabel('Count')
+plt.xticks(rotation=45)
+plt.show()
