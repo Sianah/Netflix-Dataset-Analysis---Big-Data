@@ -172,3 +172,20 @@ plt.xlabel('Year')
 plt.ylabel('Count')
 plt.xticks(rotation=45)
 plt.show()
+
+# Plot the number of movies released each month
+plt.figure(figsize=(10, 6))
+sns.countplot(x=pd.to_datetime(netflix['premiere']).dt.month, data=netflix, palette='viridis')
+plt.title('Number of Movies Released Each Month')
+plt.xlabel('Month')
+plt.ylabel('Count')
+plt.xticks(ticks=range(1, 13), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+plt.show()
+
+# Plot the number of movies released each day of the week
+plt.figure(figsize=(10, 6))
+sns.countplot(x=pd.to_datetime(netflix['premiere']).dt.day_name(), data=netflix, palette='viridis')
+plt.title('Number of Movies Released Each Day of the Week')
+plt.xlabel('Day of the Week')
+plt.ylabel('Count')
+plt.show()
