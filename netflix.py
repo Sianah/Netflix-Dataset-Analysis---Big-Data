@@ -200,3 +200,12 @@ plt.xlabel('Language')
 plt.ylabel('Count')
 plt.xticks(rotation=45)
 plt.show()
+
+#plot number of movies released each genre
+plt.figure(figsize=(10, 6))
+sns.countplot(x='genre', data=netflix, palette='viridis',hue='genre',legend=False)
+plt.title('Number of Movies Released Each Genre')
+plt.xlabel('Genre')
+plt.ylabel('Count')
+plt.xticks(rotation=45)
+plt.show()
