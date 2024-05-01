@@ -228,3 +228,15 @@ t_stat, p_value = ttest_ind(drama_scores.dropna(), comedy_scores.dropna())
 print(f"\nT-test results between Drama and Comedy IMDB scores:")
 print(f"T-Statistic: {t_stat}, P-value: {p_value}")
 
+# Assuming 'premiere' is a date field that exists
+netflix['premiere_date'] = pd.to_datetime(netflix['premiere'])
+
+# Extracting Year and Month from the premiere date
+netflix['Year'] = netflix['premiere_date'].dt.year
+netflix['Month'] = netflix['premiere_date'].dt.month
+
+# Creating an interaction term between imdb_score and runtime
+netflix['score_runtime_interaction'] = netflix['imdb_score'] * netflix['runtime']
+
+print("New features added:")
+print(netflix[['Year', 'Month', 'score_runtime_interaction']].head())
