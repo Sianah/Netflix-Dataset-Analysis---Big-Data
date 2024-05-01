@@ -16,6 +16,11 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 import plotly.express as px
 from nltk.sentiment import SentimentIntensityAnalyzer
 import networkx as nx
+import plotly.graph_objects as go
+from flask import Flask, request, jsonify, render_template
+import json
+from statsmodels.stats import weightstats as stests
+from sklearn.ensemble import RandomForestRegressor
 # REMEMEBER: Clustering is a technique in machine learning that involves grouping similar data points together.
 # It is commonly used for data analysis, pattern recognition, and image processing.
 
@@ -49,7 +54,7 @@ for k in k_range:
     kmeans.fit(x_processed)
     inertia.append(kmeans.inertia_)
 
-# Plot the inertia
+#Plot the inertia
 plt.figure(figsize=(10, 6))
 plt.plot(k_range, inertia, marker='o')
 plt.title('Elbow Method')
@@ -86,19 +91,19 @@ plt.legend(title='Cluster')
 plt.grid(True)
 plt.show()
 
-# TODO:
-# USE ANOTHER CLUSTERING TECHNIQUE(check)
-# REDUCE DIMENSIONALITY TO TWO DIMENSIONS(check)
-# GENERATE AUTOMATIC REPORTS(check)
-# PERFORM CORRELATION ANALYSIS TO KNOW HOW DIFFERENT MOVIE CHARACTERISTICS ARE RELATED(check)
-# VALIDATE THE CLUSTERING RESULTS USING THE SILHOUETTE SCORE(check)
-# ANALYZE PREMIERE DATES AND YEARS TO IDENTIFY TRENDS(check)
+# # TODO:
+# # USE ANOTHER CLUSTERING TECHNIQUE(check)
+# # REDUCE DIMENSIONALITY TO TWO DIMENSIONS(check)
+# # GENERATE AUTOMATIC REPORTS(check)
+# # PERFORM CORRELATION ANALYSIS TO KNOW HOW DIFFERENT MOVIE CHARACTERISTICS ARE RELATED(check)
+# # VALIDATE THE CLUSTERING RESULTS USING THE SILHOUETTE SCORE(check)
+# # ANALYZE PREMIERE DATES AND YEARS TO IDENTIFY TRENDS(check)
 
-# Fit and transform the data using DBSCAN
+# # Fit and transform the data using DBSCAN
 dbscan = DBSCAN(eps=0.5, min_samples=5)
 clusters = dbscan.fit_predict(x_processed)
 
-# Add the cluster labels to the dataset
+# # Add the cluster labels to the dataset
 netflix['Cluster_DBSCAN'] = clusters
 
 # Plot the clusters using DBSCAN
@@ -112,7 +117,7 @@ plt.legend(title='Cluster')
 plt.grid(True)
 plt.show()
 
-# Reduce dimensionality to two dimensions
+# # Reduce dimensionality to two dimensions
 svd = TruncatedSVD(n_components=2)
 x_svd = svd.fit_transform(x_processed)  # Apply SVD on the processed data
 netflix['SVD1'] = x_svd[:, 0]
@@ -120,7 +125,8 @@ netflix['SVD2'] = x_svd[:, 1]
 
 # Plotting DBSCAN results using the SVD reduced dimensions
 plt.figure(figsize=(10, 6))
-sns.scatterplot(x='SVD1', y='SVD2', hue='Cluster_DBSCAN', data=netflix, palette='viridis', style='Cluster_DBSCAN')
+sns.scatterplot(x='SVD1', y='SVD2', hue='Cluster_DBSCAN',
+                data=netflix, palette='viridis', style='Cluster_DBSCAN')
 plt.title('DBSCAN Clustering Results')
 plt.xlabel('SVD Component 1')
 plt.ylabel('SVD Component 2')
@@ -132,7 +138,8 @@ plt.show()
 # Display the first few rows of the dataset
 print(netflix.head())
 # Generate automatic reports
-report = pd.DataFrame({'Cluster': netflix['Cluster'], 'Genre': netflix['genre'], 'Language': netflix['language'], 'IMDB Score': netflix['imdb_score'], 'Runtime': netflix['runtime']})
+report = pd.DataFrame({'Cluster': netflix['Cluster'], 'Genre': netflix['genre'],
+                      'Language': netflix['language'], 'IMDB Score': netflix['imdb_score'], 'Runtime': netflix['runtime']})
 report.to_csv('netflix_report.csv', index=False)
 print('Automatic report generated and saved as netflix_report.csv')
 # Perform correlation analysis
@@ -152,7 +159,8 @@ print(f'Silhouette Score: {silhouette}')
 netflix['Year'] = pd.to_datetime(netflix['premiere']).dt.year
 # Plot the number of movies released each year
 plt.figure(figsize=(10, 6))
-sns.countplot(x='Year', data=netflix, palette='viridis',hue='year',legend=False)
+sns.countplot(x='Year', data=netflix, palette='viridis',
+              hue='year', legend=False)
 plt.title('Number of Movies Released Each Year')
 plt.xlabel('Year')
 plt.ylabel('Count')
@@ -162,67 +170,42 @@ plt.show()
 # Plot the number of movies released each month
 plt.figure(figsize=(10, 6))
 month = pd.to_datetime(netflix['premiere']).dt.month
-sns.countplot(x=month, data=netflix, palette='viridis', hue=month,legend=False)
+sns.countplot(x=month, data=netflix, palette='viridis',
+              hue=month, legend=False)
 plt.title('Number of Movies Released Each Month')
 plt.xlabel('Month')
 plt.ylabel('Count')
-plt.xticks(ticks=range(1, 13), labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
+plt.xticks(ticks=range(1, 13), labels=[
+           'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
 plt.show()
 
 # Plot the number of movies released each day of the week
 plt.figure(figsize=(10, 6))
 day = pd.to_datetime(netflix['premiere']).dt.day_name()
-sns.countplot(x=day, data=netflix, palette='viridis', hue=day,legend=False)
+sns.countplot(x=day, data=netflix, palette='viridis', hue=day, legend=False)
 plt.title('Number of Movies Released Each Day of the Week')
 plt.xlabel('Day of the Week')
 plt.ylabel('Count')
 plt.show()
 
-#plot number of movies released each language
+# plot number of movies released each language
 plt.figure(figsize=(10, 6))
-sns.countplot(x='language', data=netflix, palette='viridis',hue='language',legend=False)
+sns.countplot(x='language', data=netflix, palette='viridis',
+              hue='language', legend=False)
 plt.title('Number of Movies Released Each Language')
 plt.xlabel('Language')
 plt.ylabel('Count')
 plt.xticks(rotation=45)
 plt.show()
 
-#plot number of movies released each genre
+# plot number of movies released each genre
 plt.figure(figsize=(10, 6))
-sns.countplot(x='genre', data=netflix, palette='viridis',hue='genre',legend=False)
+sns.countplot(x='genre', data=netflix, palette='viridis',
+              hue='genre', legend=False)
 plt.title('Number of Movies Released Each Genre')
 plt.xlabel('Genre')
 plt.ylabel('Count')
 plt.xticks(rotation=45)
 plt.show()
 
-# Advanced Visualization with Plotly
-def interactive_cluster_plots(df, pca_data):
-    fig = px.scatter(df, x=pca_data[:, 0], y=pca_data[:, 1], color='Cluster', title='Interactive Cluster Plot')
-    fig.show()
-
-interactive_cluster_plots(netflix, x_svd)  
-
-# Text Analysis - Sentiment Analysis 
-def perform_sentiment_analysis(text_data):
-    sia = SentimentIntensityAnalyzer()
-    sentiment_scores = text_data.apply(lambda x: sia.polarity_scores(x)['compound'])
-    return sentiment_scores
-
-netflix['sentiment_score'] = perform_sentiment_analysis(netflix['description'])  # Example column
-
-# Predictive Modeling - Predicting IMDb Score
-X_train, X_test, y_train, y_test = train_test_split(x_processed, netflix['imdb_score'], test_size=0.2, random_state=42)
-model = LinearRegression()
-model.fit(X_train, y_train)
-predictions = model.predict(X_test)
-mse = mean_squared_error(y_test, predictions)
-print(f'Mean Squared Error: {mse}')
-
-# Network Analysis 
-def build_network_graph(data):
-    G = nx.from_pandas_edgelist(data, 'director', 'actor')  # Example columns
-    pos = nx.spring_layout(G)
-    nx.draw(G, pos, with_labels=True, node_color='skyblue')
-    plt.show()
 
