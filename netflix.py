@@ -208,4 +208,23 @@ plt.ylabel('Count')
 plt.xticks(rotation=45)
 plt.show()
 
+# Calculate descriptive statistics
+print("Descriptive Statistics for numerical columns:")
+print(netflix[['imdb_score', 'runtime']].describe())
+
+#Calculate additional statistics like skewness and kurtosis
+print("\nSkewness and Kurtosis:")
+print("Skewness - IMDB Score:", netflix['imdb_score'].skew())
+print("Kurtosis - IMDB Score:", netflix['imdb_score'].kurtosis())
+
+from scipy.stats import ttest_ind
+
+# Filter the data for 'Drama' and 'Comedy'
+drama_scores = netflix[netflix['genre'] == 'Drama']['imdb_score']
+comedy_scores = netflix[netflix['genre'] == 'Comedy']['imdb_score']
+
+# Perform t-test
+t_stat, p_value = ttest_ind(drama_scores.dropna(), comedy_scores.dropna())
+print(f"\nT-test results between Drama and Comedy IMDB scores:")
+print(f"T-Statistic: {t_stat}, P-value: {p_value}")
 
