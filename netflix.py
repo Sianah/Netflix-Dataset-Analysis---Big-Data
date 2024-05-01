@@ -10,28 +10,14 @@ import glob
 import random
 from sklearn.cluster import DBSCAN
 from sklearn.decomposition import PCA, TruncatedSVD
-from sklearn.metrics import silhouette_score
+from sklearn.metrics import silhouette_score, mean_squared_error
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split, GridSearchCV
+import plotly.express as px
+from nltk.sentiment import SentimentIntensityAnalyzer
+import networkx as nx
 # REMEMEBER: Clustering is a technique in machine learning that involves grouping similar data points together.
 # It is commonly used for data analysis, pattern recognition, and image processing.
-
-# # Get a list of all the files in the HTRC dataset
-# files = glob.glob('/c:/Users/Sisi/Desktop/Netflix Dataset Analysis - Big Data/netflix.csv')
-# # Shuffle the files
-# random.shuffle(files)
-# # Print the first 10 files
-# for file in files[:10]:
-#     with open(file, 'r') as f:
-#         for line in f:
-#             data = line.strip().split(',')
-#             print(data)
-# df_netflix = pd.read_csv(filepath_or_buffer="netflix.csv", encoding='latin1')
-# # print(df_netflix)
-
-# # Check for missing values in the dataset
-# missing_data_summary = df_netflix.isnull().sum()
-
-# # Display the missing data summary
-# print(missing_data_summary)
 
 # load the dataset
 netflix = pd.read_csv('netflix.csv')
@@ -209,3 +195,34 @@ plt.xlabel('Genre')
 plt.ylabel('Count')
 plt.xticks(rotation=45)
 plt.show()
+
+# Advanced Visualization with Plotly
+def interactive_cluster_plots(df, pca_data):
+    fig = px.scatter(df, x=pca_data[:, 0], y=pca_data[:, 1], color='Cluster', title='Interactive Cluster Plot')
+    fig.show()
+
+interactive_cluster_plots(netflix, x_svd)  
+
+# Text Analysis - Sentiment Analysis 
+def perform_sentiment_analysis(text_data):
+    sia = SentimentIntensityAnalyzer()
+    sentiment_scores = text_data.apply(lambda x: sia.polarity_scores(x)['compound'])
+    return sentiment_scores
+
+netflix['sentiment_score'] = perform_sentiment_analysis(netflix['description'])  # Example column
+
+# Predictive Modeling - Predicting IMDb Score
+X_train, X_test, y_train, y_test = train_test_split(x_processed, netflix['imdb_score'], test_size=0.2, random_state=42)
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+mse = mean_squared_error(y_test, predictions)
+print(f'Mean Squared Error: {mse}')
+
+# Network Analysis 
+def build_network_graph(data):
+    G = nx.from_pandas_edgelist(data, 'director', 'actor')  # Example columns
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, with_labels=True, node_color='skyblue')
+    plt.show()
+
