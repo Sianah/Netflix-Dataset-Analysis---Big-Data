@@ -240,3 +240,38 @@ netflix['score_runtime_interaction'] = netflix['imdb_score'] * netflix['runtime'
 
 print("New features added:")
 print(netflix[['Year', 'Month', 'score_runtime_interaction']].head())
+
+# Fit KMeans
+kmeans = KMeans(n_clusters=5, random_state=42)
+netflix['Cluster'] = kmeans.fit_predict(x_processed)
+
+# Summarize clusters
+for i in range(5):
+    cluster_data = netflix[netflix['Cluster'] == i]
+    print(f"\nCluster {i} Summary:")
+    print("Average IMDB Score:", cluster_data['imdb_score'].mean())
+    print("Average Runtime:", cluster_data['runtime'].mean())
+    print("Most Common Genre:", cluster_data['genre'].mode()[0])
+    print("Movies in Cluster:", cluster_data['title'].sample(3).tolist())  
+
+from sklearn.model_selection import train_test_split
+
+# Selecting features and target
+X = netflix[['runtime', 'Month', 'score_runtime_interaction']] 
+y = netflix['imdb_score']
+
+# Splitting the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Building the model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predicting and evaluating the model
+from sklearn.metrics import mean_squared_error
+
+predictions = model.predict(X_test)
+mse = mean_squared_error(y_test, predictions)
+print(f"\nModel Evaluation:")
+print(f"Mean Squared Error: {mse}")
+
