@@ -275,3 +275,54 @@ mse = mean_squared_error(y_test, predictions)
 print(f"\nModel Evaluation:")
 print(f"Mean Squared Error: {mse}")
 
+# Analyze frequency of genres and languages
+print("Frequency of each genre:")
+print(netflix['genre'].value_counts())
+
+print("\nFrequency of each language:")
+print(netflix['language'].value_counts())
+
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+
+# Categorical and numerical features
+categorical_features = ['genre', 'language']
+numerical_features = ['runtime']  # Assuming 'runtime' is your numeric feature
+
+# Creating transformers for categorical and numerical data
+categorical_transformer = OneHotEncoder(handle_unknown='ignore')
+numerical_transformer = StandardScaler()
+
+# Create a column transformer
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numerical_transformer, numerical_features),
+        ('cat', categorical_transformer, categorical_features)
+    ])
+
+# Create a pipeline that encodes then runs the regressor
+pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('regressor', RandomForestRegressor(n_estimators=100, random_state=42))
+])
+
+# Define features and target
+X = netflix.drop('imdb_score', axis=1)
+y = netflix['imdb_score']
+
+# Splitting the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fitting the model
+pipeline.fit(X_train, y_train)
+
+# Predicting and evaluating
+predictions = pipeline.predict(X_test)
+mse = mean_squared_error(y_test, predictions)
+print(f"\nRandomForest Model Evaluation:")
+print(f"Mean Squared Error: {mse}")
+
