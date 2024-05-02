@@ -326,3 +326,50 @@ mse = mean_squared_error(y_test, predictions)
 print(f"\nRandomForest Model Evaluation:")
 print(f"Mean Squared Error: {mse}")
 
+from scipy.stats import t
+import numpy as np
+from scipy import stats
+
+# Calculate the mean imdb_score for each genre and its confidence interval
+genre_groups = netflix.groupby('genre')['imdb_score']
+confidence_intervals = {}
+
+for name, group in genre_groups:
+    # Drop NA to ensure clean data
+    clean_group = group.dropna()
+    if len(clean_group) > 1: 
+        mean_score = np.mean(clean_group)
+        sem_score = stats.sem(clean_group)  
+        df = len(clean_group) - 1  
+        t_crit = t.ppf(1 - 0.025, df)  
+
+        ci_low = mean_score - t_crit * sem_score
+        ci_high = mean_score + t_crit * sem_score
+
+        confidence_intervals[name] = (ci_low, ci_high)
+    else:
+        confidence_intervals[name] = ('Insufficient data', 'Insufficient data')
+
+print("Confidence Intervals for IMDB Scores by Genre:")
+for genre, ci in confidence_intervals.items():
+    print(f"{genre}: {ci}")
+
+# Get feature names after one-hot encoding
+feature_names = list(pipeline.named_steps['preprocessor'].named_transformers_['cat'].get_feature_names_out(input_features=categorical_features))
+feature_names += numerical_features
+
+# Get feature importances from the RandomForest model
+importances = pipeline.named_steps['regressor'].feature_importances_
+
+# Display feature importances
+print("\nFeature Importances:")
+sorted_indices = np.argsort(importances)[::-1]
+for idx in sorted_indices:
+    print(f"{feature_names[idx]}: {importances[idx]}")
+
+print("\nSummary of Findings:")
+print("1. Statistical Analysis shows significant differences in IMDB scores across genres.")
+print("2. The most important features affecting movie ratings are identified and include runtime and specific genres/languages.")
+print("3. The RandomForest model predicts IMDB scores with a Mean Squared Error of {:.2f}.".format(mse))
+print("4. Confidence intervals for IMDB scores provide an understanding of the variability in ratings across genres.")
+
